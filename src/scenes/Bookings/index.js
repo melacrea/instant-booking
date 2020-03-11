@@ -1,8 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
 const Bookings=({bookings})=>(
-    <div>
+  <div>
     {bookings.length === 0 && <div>No bookings!</div>}
 
     {bookings.sort((bookingA, bookingB) => bookingA.createdAt < bookingB.createdAt).map(booking => (
@@ -13,11 +12,7 @@ const Bookings=({bookings})=>(
       </div>
     ))}
   </div>
-)
+);
 
-function mapStateToProps(state) {
-    const { bookings } = state
-    return { bookings }
-  }
-  
-export default connect(mapStateToProps)(Bookings);
+
+export default Bookings

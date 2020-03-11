@@ -2,18 +2,18 @@ import { put, takeLatest, call } from 'redux-saga/effects';
 
 import { axiosInstantBooking, handleError } from '../../utils/api';
 
-export const fetchBookings = () => {
+export const getResource = () => {
   const bearer = `Bearer ${localStorage.getItem('jwt_token')}`;
-  return axiosInstantBooking.get('/bookings', {headers: { 'Authorization': bearer}})
+  return axiosInstantBooking.get('/resource', {headers: { 'Authorization': bearer}})
     .then(response => response);
 };
 
-function* fetchBookingsFlow(action) {
+function* getResourceFlow(action) {
   try {
-    const response = yield call(fetchBookings, action.payload);
+    const response = yield call(getResource, action.payload);
     if (response) {
       yield put({
-        type: 'BOOKINGS',
+        type: 'RESOURCE',
         payload: response.data.data
       });
     }
@@ -28,6 +28,6 @@ function* fetchBookingsFlow(action) {
   }
 }
 
-export function* bookingsWatcherSaga() {
-  yield takeLatest('GET_BOOKINGS', fetchBookingsFlow);
+export function* resourcesWatcherSaga() {
+  yield takeLatest('GET_RESOURCE', getResourceFlow);
 }

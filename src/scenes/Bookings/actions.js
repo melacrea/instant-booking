@@ -1,3 +1,3 @@
 export const getBookings = () => ({
-    type: 'GET_BOOKINGS',
+  type: 'GET_BOOKINGS',
 });
