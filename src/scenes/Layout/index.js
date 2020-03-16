@@ -13,28 +13,52 @@ import Header from '../../components/Header';
 
 class Layout extends React.Component {
 
+  state = {};
+
   static propTypes = {
     bookings: PropTypes.array.isRequired
   };
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    // Store prevUserId in state so we can compare when props change.
+    // Clear out any previously-loaded user data (so we don't render stale stuff).
+    if (nextProps.bookings !== prevState.prevBookings) {
+      return {
+        prevBookings: nextProps.bookings,
+        profileOrError: null,
+      };
+    }
+
+    // No state update necessary
+    return null;
+  }
+
   componentDidMount() {
+    const { bookings } = this.props;
     const { getBookings, getResource } = this.props;
     getBookings();
     getResource();
+    console.log(bookings);
   }
 
+  componentDidUpdate
+
   currentBooking = () =>{
-    const { start, end } = this.props.bookings;
-    const currentBooking = this.props.bookings.filter(booking => moment().isBetween(moment(start), moment(end)));
-    return (currentBooking.length === 0 ? <BookingForm /> : <Resource currentBooking />);
+    const { bookings } = this.props;
+    const currentBooking = bookings.filter(booking => moment().isBetween(booking.start, booking.end));
+    return (currentBooking.length === 0 ? <BookingForm /> : <Resource currentBooking={currentBooking[0]} />);
   }
 
   render = () => (
     <Wrapper>
       <Header name={this.props.resource.name} />
       <Container>
-        {this.currentBooking()}
-        <Bookings bookings={this.props.bookings} />
+        <main>
+          {this.currentBooking()}
+        </main>
+        <aside>
+          <Bookings bookings={this.props.bookings} />
+        </aside>
       </Container>
     </Wrapper>
   )
@@ -61,5 +85,7 @@ const Wrapper = styled.section`
 `;
 
 const Container = styled.section`
+  display: flex;
+  justify-content: space-between;
   padding: 10px;
 `;
