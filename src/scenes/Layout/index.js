@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import Bookings from '../Bookings';
 import { getBookings } from '../Bookings/actions';
 import { getResource } from '../Resource/actions';
+import { getCurrentUser } from '../User/actions';
 import BookingForm from '../BookingForm';
 import Resource from '../Resource';
 import Header from '../../components/Header';
@@ -34,11 +35,10 @@ class Layout extends React.Component {
   }
 
   componentDidMount() {
-    const { bookings } = this.props;
-    const { getBookings, getResource } = this.props;
+    const { getBookings, getResource, getCurrentUser } = this.props;
     getBookings();
     getResource();
-    console.log(bookings);
+    getCurrentUser();
   }
 
   componentDidUpdate
@@ -54,6 +54,7 @@ class Layout extends React.Component {
       <Header name={this.props.resource.name} />
       <Container>
         <main>
+          Bonjour {this.props.currentUser.name}
           {this.currentBooking()}
         </main>
         <aside>
@@ -66,12 +67,14 @@ class Layout extends React.Component {
 
 const mapStateToProps = state => ({
   bookings: state.bookings,
-  resource: state.resource
+  resource: state.resource,
+  currentUser: state.currentUser
 });
 
 const mapDispatchToProps = {
   getBookings,
-  getResource
+  getResource,
+  getCurrentUser
 };
 
 export default connect(

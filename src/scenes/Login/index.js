@@ -1,15 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
+import { useDispatch } from 'react-redux';
 
-import { getToken } from './actions';
+function Login(){
+  const dispatch = useDispatch();
+  return <Button variant='contained' color='primary' onClick={() => dispatch({type: 'GET_TOKEN'})}>Press to connect</Button>;
+}
 
-const Login=({getToken})=>(
-  <Button variant='contained' color='primary' onClick={getToken}>Press to connect</Button>
-);
-
-const mapDispatchToProps = {
-  getToken
-};
-
-export default connect(null,mapDispatchToProps)(Login);
+export default Login;

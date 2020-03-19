@@ -6,18 +6,18 @@ import Login from '../scenes/Login';
 import Layout from '../scenes/Layout';
 
 function Greeting(props) {
-  const isLoggedIn = props.isLoggedIn;
-  if (isLoggedIn) {
-    return <Layout />;
-  }
+  if (props.isLoggedIn) return <Layout />;
   return <Login />;
 }
 
-const App = ({isLoggedIn}) => (
-  <div>
-    <Greeting isLoggedIn={isLoggedIn} />
-  </div>
-);
+const App = ({isLoggedIn}) => <Greeting isLoggedIn={isLoggedIn} />;
+
+function mapStateToProps(state) {
+  const { currentUser } = state;
+  return { isLoggedIn: currentUser.validToken };
+}
+
+export default connect(mapStateToProps)(App);
 
 App.propTypes = {
   isLoggedIn: PropTypes.bool,
@@ -27,9 +27,10 @@ App.defaultProps = {
   isLoggedIn: localStorage.getItem('jwt_token') != null,
 };
 
-function mapStateToProps(state) {
-  const { currentUser } = state;
-  return { isLoggedIn: currentUser.validToken };
-}
+Greeting.propTypes = {
+  isLoggedIn: PropTypes.bool,
+};
 
-export default connect(mapStateToProps)(App);
+Greeting.defaultProps = {
+  isLoggedIn: localStorage.getItem('jwt_token') != null,
+};

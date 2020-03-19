@@ -1,3 +1,3 @@
 export const getResource = () => ({
-    type: 'GET_RESOURCE',
-  });
+  type: 'GET_RESOURCE',
+});

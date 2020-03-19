@@ -2,41 +2,43 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-export default class FormGroup extends React.Component {
-  static propTypes = {
-    onChange: PropTypes.func,
-    placeholder: PropTypes.string,
-    value: PropTypes.string,
-    className: PropTypes.string,
-  };
+function FormGroup(props){
 
-  static defaultProps = {
-    onChange: () => void 0,
-    placeholder: void 0,
-    value: void 0,
-    className: void 0,
-  };
-
-  handleChange = event => {
-    const {value} = event.target;
-
+  const handleChange = event => {
+    const { value } = event.target;
     const isValid = RegExp(/$|^[a-zA-Z0-9._-]+$/).test(value);
+    
     if (!isValid) return event.preventDefault();
-
-    return this.props.onChange(value);
+    return props.onChange(value);
   };
 
-  render = () => (
-    <Wrapper className={this.props.className}>
+  return(
+    <Wrapper className={props.className}>
       <Input
-        placeholder={this.props.placeholder}
+        placeholder={props.placeholder}
         type='text'
-        onChange={this.handleChange}
-        value={this.props.value}
+        onChange={handleChange}
+        value={props.value}
       />
     </Wrapper>
   );
 }
+
+export default FormGroup;
+
+FormGroup.propTypes = {
+  onChange: PropTypes.func,
+  className: PropTypes.string,
+  value: PropTypes.string,
+  placeholder: PropTypes.string
+};
+
+FormGroup.defaultProps = {
+  className: void 0,
+  value: void 0,
+  placeholder: void 0,
+  onChange: () => void 0,
+};
 
 const Wrapper = styled.span`
   display: flex;

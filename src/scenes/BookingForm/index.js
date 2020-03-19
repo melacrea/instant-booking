@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import * as moment from 'moment';
 
 import BookingNameInput from '../../components/BookingNameInput';
 import { postBooking } from '../Bookings/actions';
@@ -9,6 +10,7 @@ import { postBooking } from '../Bookings/actions';
 class BookingForm extends React.Component {
   state = {
     input: '',
+    duration: 10
   };
 
   static propTypes = {
@@ -21,17 +23,47 @@ class BookingForm extends React.Component {
 
   onInputChange = input => this.setState({input});
 
+  onSelectChange = e => {
+    this.setState({duration: e.target.value});
+  }
+
   onSubmit = event => {
     event.preventDefault();
-    this.props.postBooking({duration: 10, name: this.bookingName});
+    this.props.postBooking({duration: this.bookingDuration, name: this.bookingName});
     this.reset();
   };
 
   reset = () => {
     this.setState({
       input: '',
+      duration: 10
     });
   };
+
+  renderOptions = () => {
+    const {resource} = this.props
+    let nbOptions = Math.floor(this.maxDurationBooking() / resource.bookingDurationStep)
+    let options = []
+    for(let i = 1; i <= nbOptions; i++){
+      if(i*resource.bookingDurationStep >= resource.minimumBookingDuration){
+        options.push(<option key={i} value={i*resource.bookingDurationStep}>{i*resource.bookingDurationStep}</option>)
+      }
+     }
+    return options
+  }
+
+  maxDurationBooking = () => {
+    const {bookings, resource} = this.props;
+    let maxBooking = resource.maximumBookingDuration;
+    let diffFromNow = 0;
+    for(let i = 0; i < bookings.length; i++){
+      diffFromNow = moment(bookings[i].start).diff(moment(), 'minutes')
+      if(diffFromNow > 0 && diffFromNow < maxBooking){
+        return diffFromNow
+      }
+    }
+    return maxBooking;
+  }
 
   get isFormValid() {
     return this.state.input.length > 2;
@@ -41,12 +73,19 @@ class BookingForm extends React.Component {
     return this.state.input;
   }
 
+  get bookingDuration() {
+    return this.state.duration;
+  }
+
   render = () => (
     <Form onSubmit={this.onSubmit}>
       <Input
         value={this.state.input}
         onChange={this.onInputChange}
       />
+      <select onChange={this.onSelectChange} value={this.state.duration}>
+        {this.renderOptions()}
+      </select>
       <SubmitButton type='submit' disabled={!this.isFormValid}>
         submit
       </SubmitButton>
@@ -54,13 +93,17 @@ class BookingForm extends React.Component {
   );
 }
 
+const mapStateToProps = state => ({
+  resource: state.resource,
+  bookings: state.bookings
+});
 
 const mapDispatchToProps = {
   postBooking
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(BookingForm);
 
@@ -70,7 +113,7 @@ const Form = styled.form`
 `;
 
 const Input = styled(BookingNameInput).attrs({
-  placeholder: 'Nom de la résevation',
+  placeholder: 'Nom de la réservation',
 })`
   flex-grow: 1;
   margin-right: 1.142857143rem;

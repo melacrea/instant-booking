@@ -10,6 +10,8 @@ const Header = ({name, className}) => (
   </Wrapper>
 );
 
+export default Header;
+
 Header.propTypes = {
   className: PropTypes.string,
   name: PropTypes.string
@@ -19,8 +21,6 @@ Header.defaultProps = {
   className: void 0,
   name: ''
 };
-
-export default Header;
 
 const Wrapper = styled.header`
   display: flex;
