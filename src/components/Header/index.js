@@ -41,7 +41,7 @@ const Title = styled.h1`
   line-height: 1.2;
 `;
 
-const Date = styled.span`
+const Date = styled.time`
   line-height: 1.2;
   color: ${COLORS.WHITE};
 `;
