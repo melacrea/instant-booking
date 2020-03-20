@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import * as moment from 'moment';
 
 import BookingNameInput from '../../components/BookingNameInput';
+import { Button } from '../../components/Button';
 import { postBooking } from '../Bookings/actions';
 
 class BookingForm extends React.Component {
@@ -14,11 +15,11 @@ class BookingForm extends React.Component {
   };
 
   static propTypes = {
-    onSubmit: PropTypes.func,
+    postBooking: PropTypes.func,
   };
 
   static defaultProps = {
-    onSubmit: () => void 0,
+    postBooking: () => void 0,
   };
 
   onInputChange = input => this.setState({input});
@@ -41,25 +42,28 @@ class BookingForm extends React.Component {
   };
 
   renderOptions = () => {
-    const {resource} = this.props
+    const { resource } = this.props;
     let nbOptions = Math.floor(this.maxDurationBooking() / resource.bookingDurationStep)
-    let options = []
+    let options = [];
     for(let i = 1; i <= nbOptions; i++){
       if(i*resource.bookingDurationStep >= resource.minimumBookingDuration){
-        options.push(<option key={i} value={i*resource.bookingDurationStep}>{i*resource.bookingDurationStep}</option>)
+        options.push(
+          <option key={i} 
+            value={i*resource.bookingDurationStep}>{i*resource.bookingDurationStep} min
+          </option>);
       }
-     }
-    return options
+    };
+    return options;
   }
 
   maxDurationBooking = () => {
-    const {bookings, resource} = this.props;
+    const { bookings, resource } = this.props;
     let maxBooking = resource.maximumBookingDuration;
     let diffFromNow = 0;
     for(let i = 0; i < bookings.length; i++){
-      diffFromNow = moment(bookings[i].start).diff(moment(), 'minutes')
+      diffFromNow = moment(bookings[i].start).diff(moment(), 'minutes');
       if(diffFromNow > 0 && diffFromNow < maxBooking){
-        return diffFromNow
+        return diffFromNow;
       }
     }
     return maxBooking;
@@ -79,16 +83,21 @@ class BookingForm extends React.Component {
 
   render = () => (
     <Form onSubmit={this.onSubmit}>
+      <Title>Réserver la salle maintenant, pour une durée de :  </Title>    
+      <Label htmlFor='duration'>Durée</Label>
+      <Select aria-required='true' id='duration' onChange={this.onSelectChange} value={this.state.duration}>
+        {this.renderOptions()}
+      </Select>
+      <Label htmlFor='name'>Motif de la réservation</Label>
       <Input
+        id='name'
         value={this.state.input}
         onChange={this.onInputChange}
+        aria-required='true'
       />
-      <select onChange={this.onSelectChange} value={this.state.duration}>
-        {this.renderOptions()}
-      </select>
-      <SubmitButton type='submit' disabled={!this.isFormValid}>
-        submit
-      </SubmitButton>
+      <Button type='submit' disabled={!this.isFormValid}>
+        Réserver
+      </Button>
     </Form>
   );
 }
@@ -109,38 +118,28 @@ export default connect(
 
 const Form = styled.form`
   margin-bottom: 2rem;
-  display: flex;
 `;
 
-const Input = styled(BookingNameInput).attrs({
-  placeholder: 'Nom de la réservation',
-})`
-  flex-grow: 1;
-  margin-right: 1.142857143rem;
+const Input = styled(BookingNameInput)``;
+
+const Title = styled.p`
+  margin-bottom: 30px;
 `;
 
-const SubmitButton = styled.button`
-  margin-left: auto;
-  padding: 1rem 1.5rem;
-  line-height: 1.571428571;
+const Label = styled.label`
   display: block;
+  margin-bottom: 5px;
+`;
+
+const Select = styled.select`
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none; 
+  display: block;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  margin-bottom: 20px;
+  flex-grow: 1;
+  font-size: 1rem;
   border: 0;
-  border-radius: 2px;
-  font-family: inherit;
-  font-weight: bold;
-  font-size: 0.785714286rem;
-  letter-spacing: 0.181818182em;
-  text-transform: uppercase;
-  background-color: #ddd;
-  color: #fff;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  &:focus {
-    box-shadow: 0 0 0 3px #ddd;
-  }
 `;

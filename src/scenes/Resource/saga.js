@@ -24,7 +24,7 @@ function* getResourceFlow(action) {
         payload: false
       });
     }
-    //handleError(err);
+    handleError(err);
   }
 }
 

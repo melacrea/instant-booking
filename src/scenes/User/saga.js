@@ -24,11 +24,10 @@ function* getCurrentUserFlow() {
         payload: false
       });
     }
-    //handleError(err);
+    handleError(err);
   }
 }
 
 export function* currentUserWatcherSaga() {
   yield takeLatest('GET_CURRENT_USER', getCurrentUserFlow);
-  //yield takeLatest('GET_USER', getCurrentUserFlow);
 }

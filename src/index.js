@@ -8,6 +8,7 @@ import { logger } from 'redux-logger';
 import rootReducer from './reducers';
 import App from './components/App';
 import rootSaga from './sagas';
+import GlobalStyle from './style/global';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -20,6 +21,7 @@ sagaMiddleware.run(rootSaga);
 
 render(
   <Provider store={store}>
+    <GlobalStyle />
     <App />
   </Provider>,
   document.getElementById('root')

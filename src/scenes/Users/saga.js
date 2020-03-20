@@ -9,8 +9,6 @@ export const getUser = data => {
 };
 
 function* getUserFlow(action) {
-  console.log('here');
-  
   try {
     const response = yield call(getUser, action.payload);
     if (response) {
@@ -26,7 +24,7 @@ function* getUserFlow(action) {
         payload: false
       });
     }
-    //handleError(err);
+    handleError(err);
   }
 }
 

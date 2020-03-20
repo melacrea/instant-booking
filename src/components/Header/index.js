@@ -3,8 +3,10 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import * as moment from 'moment';
 
+import COLORS from '../../style/colors';
+
 const Header = ({name, className}) => (
-  <Wrapper className={className}>
+  <Wrapper role='banner' className={className}>
     <Title>{name}</Title>
     <Date>{moment().format('DD/MM/YYYY')}</Date>
   </Wrapper>
@@ -27,16 +29,18 @@ const Wrapper = styled.header`
   padding: 10px;
   justify-content: space-between;
   align-items: center;
+  background-color: ${COLORS.PRIMARY};
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
 `;
 
 const Title = styled.span`
   font-weight: bold;
   font-size: 1.4rem;
+  color: ${COLORS.WHITE};
   line-height: 1.2;
 `;
 
 const Date = styled.span`
-  font-weight: bold;
   line-height: 1.2;
+  color: ${COLORS.WHITE};
 `;

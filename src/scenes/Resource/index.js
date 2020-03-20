@@ -1,6 +1,7 @@
 import React from 'react';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 
 import DeleteButton from '../Bookings/Delete';
 import {getUser} from '../Users/actions';
@@ -16,15 +17,13 @@ class Resource extends React.Component {
         users: nextProps.users,
       };
     }
-
-    // No state update necessary
     return null;
   }
 
   componentDidMount() {
     const { users, currentBooking, getUser } = this.props;
-    let u = users.filter(user => user.id == currentBooking.userId);
-    if(u.length == 0){
+    let u = users.filter(user => user.id === currentBooking.userId);
+    if(u.length === 0){
       getUser({id: currentBooking.userId});
     }
   }
@@ -40,11 +39,11 @@ class Resource extends React.Component {
   }
 
   render = () => (
-    <div>
-      La salle est réservée par {this.renderOwnerName()} jusqu'à <Moment local format='HH:mm'>{this.props.currentBooking.end}</Moment> 
-      <div>Motif : {this.props.currentBooking.name}</div>
+    <Text>
+      La salle est réservée par <OwnerName>{this.renderOwnerName()}</OwnerName> jusqu'à <Time datetime={this.props.currentBooking.end}><Moment local format='HH:mm'>{this.props.currentBooking.end}</Moment></Time> 
+      <BookingName>Motif : {this.props.currentBooking.name}</BookingName>
       <DeleteButton booking={this.props.currentBooking} />
-    </div>
+    </Text>
   )
 }
 
@@ -57,3 +56,22 @@ const mapDispatchToProps = {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Resource);
+
+const OwnerName = styled.span`
+  font-weight: bold;
+`
+
+const Time = styled.time`
+  font-weight: bold;
+`
+
+const Text = styled.div`
+  text-align: center;
+  line-height: 2;
+`
+
+const BookingName = styled.h3`
+  margin: 15px 0;
+  font-size: 1.3rem;
+  font-weight: bold;
+`

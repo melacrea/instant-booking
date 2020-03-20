@@ -13,7 +13,7 @@ const dates = booking => {
 const Booking = ({booking}) => (
   <ListItem>
     <ListItemText primary={booking.name} secondary={dates(booking)} />
-    <DeleteButton booking={booking} />
+    <DeleteButton small booking={booking} />
   </ListItem>
 );
 

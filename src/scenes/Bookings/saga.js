@@ -1,23 +1,23 @@
-import { put, takeLatest, take, call } from 'redux-saga/effects';
+import { put, takeLatest, call } from 'redux-saga/effects';
 
 import { axiosInstantBooking, handleError } from '../../utils/api';
 
-export const fetchBookings = () => {
+export const fetchBookings = async () => {
   const bearer = `Bearer ${localStorage.getItem('jwt_token')}`;
-  return axiosInstantBooking.get('/bookings', {headers: { 'Authorization': bearer}})
-    .then(response => response);
+  const response = await axiosInstantBooking.get('/bookings', { headers: { 'Authorization': bearer } });
+  return response;
 };
 
-export const postBooking = data => {
+export const postBooking = async data => {
   const bearer = `Bearer ${localStorage.getItem('jwt_token')}`;
-  return axiosInstantBooking.post('/bookings', data, {headers: { 'Authorization': bearer}})
-    .then(response => response);
+  const response = await axiosInstantBooking.post('/bookings', data, { headers: { 'Authorization': bearer } });
+  return response;
 };
 
-export const deleteBooking = data => {
+export const deleteBooking = async data => {
   const bearer = `Bearer ${localStorage.getItem('jwt_token')}`;
-  return axiosInstantBooking.delete(`/bookings/${data.id}`, {headers: { 'Authorization': bearer}})
-    .then(response => response);
+  const response = await axiosInstantBooking.delete(`/bookings/${data.id}`, { headers: { 'Authorization': bearer } });
+  return response;
 };
 
 function* fetchBookingsFlow() {
@@ -36,7 +36,7 @@ function* fetchBookingsFlow() {
         payload: false
       });
     }
-    //handleError(err);
+    handleError(err);
   }
 }
 
@@ -52,8 +52,13 @@ function* postBookingFlow(action) {
         type: 'TOKEN_RECEIVED',
         payload: false
       });
+    }else{
+      yield put({
+        type: 'ERROR_RECEIVED',
+        payload: {message: err.response.data.message, type: 'error'}
+      });
     }
-    //handleError(err);
+    handleError(err);
   }
 }
 
@@ -70,7 +75,7 @@ function* deleteBookingFlow(action) {
         payload: false
       });
     }
-    //handleError(err);
+    handleError(err);
   }
 }
 

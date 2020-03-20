@@ -10,7 +10,7 @@ function Greeting(props) {
   return <Login />;
 }
 
-const App = ({isLoggedIn}) => <Greeting isLoggedIn={isLoggedIn} />;
+const App = ({isLoggedIn}) => <Greeting isLoggedIn={isLoggedIn} />
 
 function mapStateToProps(state) {
   const { currentUser } = state;

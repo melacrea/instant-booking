@@ -1,10 +1,10 @@
-import React from 'react'
-import Button from '@material-ui/core/Button';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { Button } from '../../../components/Button';
 import { deleteBooking } from '../../Bookings/actions';
-import WithCurrentUser from '../../../services/WithCurrentUser';
+import WithCurrentUser from '../../../HOC/WithCurrentUser';
 
 function DeleteButton(props){
 
@@ -12,7 +12,7 @@ function DeleteButton(props){
     props.deleteBooking({id: props.booking.id});
   };
 
-  return <Button variant='contained' color='primary' onClick={deleteBooking}>Delete</Button>;
+  return <Button type='button' small={props.small} onClick={deleteBooking}>Annuler</Button>;
 }
 
 const mapStateToProps = state => ({
@@ -30,8 +30,10 @@ export default connect(
 DeleteButton.propTypes = {
   deleteBooking: PropTypes.func,
   booking: PropTypes.shape({ id: PropTypes.string }).isRequired,
+  small: PropTypes.bool,
 };
 
 DeleteButton.defaultProps = {
   deleteBooking: void 0,
+  small: false,
 };

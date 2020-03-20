@@ -11,26 +11,34 @@ import { getCurrentUser } from '../User/actions';
 import BookingForm from '../BookingForm';
 import Resource from '../Resource';
 import Header from '../../components/Header';
+import COLORS from '../../style/colors';
 
 class Layout extends React.Component {
 
   state = {};
 
   static propTypes = {
-    bookings: PropTypes.array.isRequired
+    bookings: PropTypes.array.isRequired,
+    resource: PropTypes.object.isRequired,
+    currentUser: PropTypes.object.isRequired,
+    getBookings: PropTypes.func,
+    getResource: PropTypes.func,
+    getCurrentUser: PropTypes.func,
+  };
+
+  static defaultProps = {
+    getBookings: () => void 0,
+    getResource: () => void 0,
+    getCurrentUser: () => void 0,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    // Store prevUserId in state so we can compare when props change.
-    // Clear out any previously-loaded user data (so we don't render stale stuff).
     if (nextProps.bookings !== prevState.prevBookings) {
       return {
         prevBookings: nextProps.bookings,
         profileOrError: null,
       };
     }
-
-    // No state update necessary
     return null;
   }
 
@@ -41,25 +49,27 @@ class Layout extends React.Component {
     getCurrentUser();
   }
 
-  componentDidUpdate
-
   currentBooking = () =>{
     const { bookings } = this.props;
-    const currentBooking = bookings.filter(booking => moment().isBetween(booking.start, booking.end));
-    return (currentBooking.length === 0 ? <BookingForm /> : <Resource currentBooking={currentBooking[0]} />);
+    const currentBooking = bookings.filter(
+      booking => moment().isBetween(booking.start, booking.end));
+    return (
+      currentBooking.length === 0 ? 
+        <BookingForm /> : <Resource currentBooking={currentBooking[0]} />
+    );
   }
 
   render = () => (
     <Wrapper>
       <Header name={this.props.resource.name} />
       <Container>
-        <main>
-          Bonjour {this.props.currentUser.name}
+        <Main>
+          <Title>Bonjour {this.props.currentUser.name} !</Title>
           {this.currentBooking()}
-        </main>
-        <aside>
+        </Main>
+        <Aside>
           <Bookings bookings={this.props.bookings} />
-        </aside>
+        </Aside>
       </Container>
     </Wrapper>
   )
@@ -68,7 +78,8 @@ class Layout extends React.Component {
 const mapStateToProps = state => ({
   bookings: state.bookings,
   resource: state.resource,
-  currentUser: state.currentUser
+  currentUser: state.currentUser,
+  feedback: state.feedback
 });
 
 const mapDispatchToProps = {
@@ -82,13 +93,39 @@ export default connect(
   mapDispatchToProps
 )(Layout );
 
+const Main = styled.section`
+  width: 70%;
+  padding: 20px;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+const Title = styled.h1`
+  margin-top: 10px;
+  font-size: 1.5rem;
+`;
+
 const Wrapper = styled.section`
+  margin: auto;
   min-height: calc(100vh - 70px);
-  background-color: #ddd;
+  max-width: 700px;
+  background-color: ${COLORS.WHITE};
 `;
 
 const Container = styled.section`
   display: flex;
   justify-content: space-between;
   padding: 10px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+const Aside = styled.aside`
+  width: 30%;
+  border-left: 1px solid ${COLORS.GREY_LIGHT};
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
