@@ -1,6 +1,5 @@
 export default {
   PRIMARY: '#4595CA',
-  SECONDARY: 'rgb(73, 125, 239)',
   GREY: 'rgb(212, 217, 226)',
   GREY_LIGHT: 'rgb(247, 247, 247)',
   WHITE: 'rgb(255, 255, 255)',

@@ -14,6 +14,9 @@ const GlobalStyle = createGlobalStyle`
     color: ${COLORS.BLACK};
     font-family: 'Lato', sans-serif;
     background-color: #eee;
+    @media (max-width: 768px) {
+      margin: 0;
+    }
   }
 
   *,
