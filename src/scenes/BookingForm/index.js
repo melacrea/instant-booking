@@ -4,48 +4,30 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
 
-import BookingNameInput from '../../components/BookingNameInput';
 import { Button } from '../../components/Button';
 import { postBooking } from '../Bookings/actions';
 
-class BookingForm extends React.Component {
-  state = {
-    input: '',
-    duration: 10
-  };
+function BookingForm(props){
 
-  static propTypes = {
-    postBooking: PropTypes.func,
-    bookings: PropTypes.array.isRequired,
-    resource: PropTypes.object.isRequired,
-  };
+  const [duration, setDuration] = React.useState(10);
+  const [input, setValue] = React.useState('');
 
-  static defaultProps = {
-    postBooking: () => void 0,
-  };
-
-  onInputChange = input => this.setState({input});
-
-  onSelectChange = e => {
-    this.setState({duration: e.target.value});
-  }
-
-  onSubmit = event => {
+  const onSubmit = event => {
     event.preventDefault();
-    this.props.postBooking({duration: this.bookingDuration, name: this.bookingName});
-    this.reset();
+    if(isFormValid()){
+      props.postBooking({duration: duration, name: input});
+    }
+    reset();
   };
 
-  reset = () => {
-    this.setState({
-      input: '',
-      duration: 10
-    });
+  const reset = () => {
+    setValue('');
+    setDuration(10);
   };
 
-  renderOptions = () => {
-    const { resource } = this.props;
-    let nbOptions = Math.floor(this.maxDurationBooking() / resource.bookingDurationStep);
+  const renderOptions = () => {
+    const { resource } = props;
+    let nbOptions = Math.floor(maxDurationBooking() / resource.bookingDurationStep);
     let options = [];
     for(let i = 1; i <= nbOptions; i++){
       if(i*resource.bookingDurationStep >= resource.minimumBookingDuration){
@@ -56,10 +38,10 @@ class BookingForm extends React.Component {
       }
     }
     return options;
-  }
+  };
 
-  maxDurationBooking = () => {
-    const { bookings, resource } = this.props;
+  const maxDurationBooking = () => {
+    const { bookings, resource } = props;
     let maxBooking = resource.maximumBookingDuration;
     let diffFromNow = 0;
     for(let i = 0; i < bookings.length; i++){
@@ -69,35 +51,29 @@ class BookingForm extends React.Component {
       }
     }
     return maxBooking;
-  }
+  };
 
-  get isFormValid() {
-    return this.state.input.length > 2;
-  }
+  const isFormValid = () => {
+    return input.length > 2;
+  };
 
-  get bookingName() {
-    return this.state.input;
-  }
-
-  get bookingDuration() {
-    return this.state.duration;
-  }
-
-  render = () => (
-    <Form onSubmit={this.onSubmit}>
-      <Title>Réserver la salle maintenant, pour une durée de :  </Title>    
+  return(
+    <Form onSubmit={onSubmit}>
+      <Title>Réserver la salle maintenant, pour une durée de : </Title>    
       <Label htmlFor='duration'>Durée</Label>
-      <Select aria-required='true' id='duration' onChange={this.onSelectChange} value={this.state.duration}>
-        {this.renderOptions()}
+      <Select aria-required='true' id='duration' onChange={(e) => setDuration(e.target.value)} value={duration}>
+        {renderOptions()}
       </Select>
       <Label htmlFor='name'>Motif de la réservation</Label>
       <Input
+        type='text'
         id='name'
-        value={this.state.input}
-        onChange={this.onInputChange}
+        autoComplete='off'
+        value={input}
+        onChange={(e) => setValue(e.target.value)}
         aria-required='true'
       />
-      <Button type='submit' disabled={!this.isFormValid}>
+      <Button type='submit' disabled={!isFormValid()}>
         Réserver
       </Button>
     </Form>
@@ -113,6 +89,16 @@ const mapDispatchToProps = {
   postBooking
 };
 
+BookingForm.propTypes = {
+  postBooking: PropTypes.func,
+  bookings: PropTypes.array.isRequired,
+  resource: PropTypes.object.isRequired,
+};
+
+BookingForm.defaultProps = {
+  postBooking: () => void 0,
+};
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
@@ -122,7 +108,12 @@ const Form = styled.form`
   margin-bottom: 2rem;
 `;
 
-const Input = styled(BookingNameInput)``;
+const Input = styled.input`
+  width:100%;
+  font-size: 1rem;
+  padding: 1rem 1.2rem;
+  line-height: 1.6;
+`;
 
 const Title = styled.p`
   margin-bottom: 30px;
