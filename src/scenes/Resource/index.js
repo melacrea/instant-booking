@@ -2,13 +2,18 @@ import React from 'react';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import DeleteButton from '../Bookings/Delete';
 import {getUser} from '../Users/actions';
 
 class Resource extends React.Component {
-  state = {
-    ownerBooking: ''
+  state = {};
+
+  static propTypes = {
+    getUser: PropTypes.func.isRequired,
+    users: PropTypes.array.isRequired,
+    currentBooking: PropTypes.object.isRequired,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -33,7 +38,7 @@ class Resource extends React.Component {
     const { currentBooking } = this.props;
     let o = users.filter(user => user.id === currentBooking.userId);
     if(o.length > 0){
-      let owner = o[0]
+      let owner = o[0];
       return owner.name;
     }
   }
@@ -59,19 +64,19 @@ export default connect(mapStateToProps, mapDispatchToProps)(Resource);
 
 const OwnerName = styled.span`
   font-weight: bold;
-`
+`;
 
 const Time = styled.time`
   font-weight: bold;
-`
+`;
 
 const Text = styled.div`
   text-align: center;
   line-height: 2;
-`
+`;
 
 const BookingName = styled.h3`
   margin: 15px 0;
   font-size: 1.3rem;
   font-weight: bold;
-`
+`;

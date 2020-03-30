@@ -1,15 +1,15 @@
 import { put, takeLatest, call } from 'redux-saga/effects';
 
-import { axiosInstantBooking } from '../../utils/api';
+import { axiosInstantBooking, handleError } from '../../utils/api';
 
-export const fetchRoomInfos = () => {
+export const getToken = () => {
   return axiosInstantBooking.get('/login')
     .then(response => response);
 };
 
-function* fetchRoomInfosFlow(action) {
+function* getTokenFlow(action) {
   try {
-    const response = yield call(fetchRoomInfos, action.payload);
+    const response = yield call(getToken, action.payload);
     if (response) {
       localStorage.setItem('jwt_token', response.data.data.token);
       yield put({
@@ -18,9 +18,10 @@ function* fetchRoomInfosFlow(action) {
       });
     }
   } catch (err) {
+    handleError(err);
   }
 }
 
 export function* loginWatcherSaga() {
-  yield takeLatest('GET_TOKEN', fetchRoomInfosFlow);
+  yield takeLatest('GET_TOKEN', getTokenFlow);
 }

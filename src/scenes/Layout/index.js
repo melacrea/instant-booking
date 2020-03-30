@@ -32,16 +32,6 @@ class Layout extends React.Component {
     getCurrentUser: () => void 0,
   };
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.bookings !== prevState.prevBookings) {
-      return {
-        prevBookings: nextProps.bookings,
-        profileOrError: null,
-      };
-    }
-    return null;
-  }
-
   componentDidMount() {
     const { getBookings, getResource, getCurrentUser } = this.props;
     getBookings();
@@ -91,7 +81,7 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Layout );
+)(Layout);
 
 const Main = styled.section`
   width: 70%;

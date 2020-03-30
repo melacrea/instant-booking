@@ -15,7 +15,6 @@ function FormGroup(props){
   return(
     <Wrapper className={props.className}>
       <Input
-        placeholder={props.placeholder}
         type='text'
         onChange={handleChange}
         value={props.value}
@@ -30,13 +29,11 @@ FormGroup.propTypes = {
   onChange: PropTypes.func,
   className: PropTypes.string,
   value: PropTypes.string,
-  placeholder: PropTypes.string
 };
 
 FormGroup.defaultProps = {
   className: void 0,
   value: void 0,
-  placeholder: void 0,
   onChange: () => void 0,
 };
 
@@ -49,17 +46,13 @@ const Wrapper = styled.span`
   &:focus-within {
     box-shadow: 0 0 0 3px #ccc;
   }
-
-  ::placeholder {
-    color: rgba(68, 68, 68, 0.6);
-  }
 `;
 
 const Input = styled.input`
   flex-grow: 1;
   font-size: 1rem;
-  padding: 1rem 1.142857143rem;
-  line-height: 1.571428571;
+  padding: 1rem 1.2rem;
+  line-height: 1.6;
   border: 0;
 
   &:focus {

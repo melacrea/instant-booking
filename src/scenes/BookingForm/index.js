@@ -16,6 +16,8 @@ class BookingForm extends React.Component {
 
   static propTypes = {
     postBooking: PropTypes.func,
+    bookings: PropTypes.array.isRequired,
+    resource: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -43,16 +45,16 @@ class BookingForm extends React.Component {
 
   renderOptions = () => {
     const { resource } = this.props;
-    let nbOptions = Math.floor(this.maxDurationBooking() / resource.bookingDurationStep)
+    let nbOptions = Math.floor(this.maxDurationBooking() / resource.bookingDurationStep);
     let options = [];
     for(let i = 1; i <= nbOptions; i++){
       if(i*resource.bookingDurationStep >= resource.minimumBookingDuration){
         options.push(
           <option key={i} 
-            value={i*resource.bookingDurationStep}>{i*resource.bookingDurationStep} min
+            value={i*resource.bookingDurationStep}>{i*resource.bookingDurationStep} minutes
           </option>);
       }
-    };
+    }
     return options;
   }
 
